@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
         const invoice = await Invoice.createInvoice(invoiceSpecificOptions, {
             externalId: externalId,
             amount: amountInIDR,
-            payerEmail: 'nausicaa.network@domain.com', // Ganti dengan emailmu
+            payerEmail: 'arlieztopia@gmail.com', // Ganti dengan emailmu
             description: `Pembelian Rank ${rank} untuk IGN: ${ign}`,
             
             // (3) METADATA: Data penting yang akan dibaca Webhook (File selanjutnya)

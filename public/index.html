@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nausicaa Network - Conquer the Skies</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
+        }
+        
+        @keyframes particle-float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+            background-size: 200% 200%;
+            animation: gradient-shift 15s ease infinite;
+            min-height: 100vh;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: rgba(96, 165, 250, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particle-float linear infinite;
+        }
+        
+        .glass {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+        }
+        
+        .rank-card {
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+        
+        .rank-card.visible {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .rank-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(96, 165, 250, 0.3);
+        }
+        
+        .nausicaa-rank {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        .btn-shine {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-shine::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-shine:hover::before {
+            animation: shine 0.8s;
+        }
+        
+        .hero-text {
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+        
+        nav {
+            backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles -->
+    <div id="particles"></div>
+    
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 border-b border-cyan-500/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                    NAUSICAA
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="hover:text-cyan-400 transition">Home</a>
+                    <a href="#store" class="hover:text-cyan-400 transition">Store</a>
+                    <a href="#vote" class="hover:text-cyan-400 transition">Vote</a>
+                    <a href="#wiki" class="hover:text-cyan-400 transition">Wiki</a>
+                </div>
+                <button class="bg-gradient-to-r from-cyan-500 to-blue-600 px-6 py-2 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition btn-shine">
+                    Play Now
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center px-4 pt-16">
+        <div class="text-center max-w-4xl">
+            <h1 class="hero-text text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 bg-clip-text text-transparent" style="animation-delay: 0.2s">
+                Conquer the Skies of Nausicaa
+            </h1>
+            <p class="hero-text text-xl md:text-2xl text-gray-300 mb-8" style="animation-delay: 0.4s">
+                The ultimate survival experience awaits.
+            </p>
+            <div class="hero-text flex flex-col sm:flex-row gap-4 justify-center items-center" style="animation-delay: 0.6s">
+                <button id="copyBtn" class="glass px-8 py-4 rounded-lg font-semibold hover:bg-cyan-500/20 transition btn-shine flex items-center gap-3">
+                    <i class="fas fa-copy"></i>
+                    <span id="ipText">play.hvn-nausicaa.my.id</span>
+                </button>
+                <div class="text-sm text-gray-400">Click to copy server IP</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Rank Store Section -->
+    <section id="store" class="py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                Choose Your Path
+            </h2>
+            <p class="text-center text-gray-400 mb-16 text-lg">Unlock exclusive perks and dominate the skies</p>
+
+            <div class="max-w-sm mx-auto mb-16">
+                <label for="ign" class="block text-lg font-semibold mb-2 text-cyan-400">
+                    Nama In-Game (IGN) Kamu:
+                </label>
+                <input type="text" id="ign" placeholder="Masukkan Nickname Minecraftmu" required 
+                        class="w-full glass p-3 rounded-lg border border-cyan-500/30 focus:ring-cyan-500 focus:border-cyan-500 text-gray-100 placeholder-gray-500">
+            </div>      
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Breeze -->
+                <div class="rank-card glass rounded-xl p-6 hover:border-cyan-500/50">
+                    <div class="text-4xl mb-4 text-cyan-300"><i class="fas fa-wind"></i></div>
+                    <h3 class="text-2xl font-bold mb-2 text-cyan-300">Breeze</h3>
+                    <p class="text-3xl font-bold mb-4 text-yellow-400">$5</p>
+                    <ul class="space-y-2 mb-6 text-gray-300">
+                        <li><i class="fas fa-check text-cyan-400"></i> 2 Homes</li>
+                        <li><i class="fas fa-check text-cyan-400"></i> /kit breeze</li>
+                        <li><i class="fas fa-check text-cyan-400"></i> Cyan Name Tag</li>
+                        <li><i class="fas fa-check text-cyan-400"></i> 5 Claim Blocks</li>
+                    </ul>
+                    <button class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 py-3 rounded-lg font-semibold hover:shadow-lg transition btn-shine **purchase-btn**" **data-rank="Breeze" data-price="5000"**>
+                        Purchase
+                    </button>
+                </div>
+                
+                <!-- Gust -->
+                <div class="rank-card glass rounded-xl p-6 hover:border-cyan-500/50">
+                    <div class="text-4xl mb-4 text-cyan-400"><i class="fas fa-cloud"></i></div>
+                    <h3 class="text-2xl font-bold mb-2 text-cyan-400">Gust</h3>
+                    <p class="text-3xl font-bold mb-4 text-yellow-400">$10</p>
+                    <ul class="space-y-2 mb-6 text-gray-300">
+                        <li><i class="fas fa-check text-cyan-400"></i> 4 Homes</li>
+                        <li><i class="fas fa-check text-cyan-400"></i> /kit gust</li>
+                        <li><i class="fas fa-check text-cyan-400"></i> Particle Effects</li>
+                        <li><i class="fas fa-check text-cyan-400"></i> 10 Claim Blocks</li>
+                    </ul>
+                    <button class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 py-3 rounded-lg font-semibold hover:shadow-lg transition btn-shine **purchase-btn**" **data-rank="Gust" data-price="10000"**>
+                        Purchase
+                    </button>
+                </div>
+                
+                <!-- Gale -->
+                <div class="rank-card glass rounded-xl p-6 hover:border-blue-500/50">
+                    <div class="text-4xl mb-4 text-blue-400"><i class="fas fa-tornado"></i></div>
+                    <h3 class="text-2xl font-bold mb-2 text-blue-400">Gale</h3>
+                    <p class="text-3xl font-bold mb-4 text-yellow-400">$20</p>
+                    <ul class="space-y-2 mb-6 text-gray-300">
+                        <li><i class="fas fa-check text-blue-400"></i> 6 Homes</li>
+                        <li><i class="fas fa-check text-blue-400"></i> /kit gale</li>
+                        <li><i class="fas fa-check text-blue-400"></i> Custom Prefix</li>
+                        <li><i class="fas fa-check text-blue-400"></i> 20 Claim Blocks</li>
+                    </ul>
+                    <button class="w-full bg-gradient-to-r from-blue-600 to-purple-600 py-3 rounded-lg font-semibold hover:shadow-lg transition btn-shine **purchase-btn**" **data-rank="Gale" data-price="20000"**>
+                        Purchase
+                    </button>
+                </div>
+                
+                <!-- Cyclone -->
+                <div class="rank-card glass rounded-xl p-6 hover:border-blue-500/50">
+                    <div class="text-4xl mb-4 text-blue-500"><i class="fas fa-hurricane"></i></div>
+                    <h3 class="text-2xl font-bold mb-2 text-blue-500">Cyclone</h3>
+                    <p class="text-3xl font-bold mb-4 text-yellow-400">$35</p>
+                    <ul class="space-y-2 mb-6 text-gray-300">
+                        <li><i class="fas fa-check text-blue-400"></i> 8 Homes</li>
+                        <li><i class="fas fa-check text-blue-400"></i> /kit cyclone</li>
+                        <li><i class="fas fa-check text-blue-400"></i> /fly Command</li>
+                        <li><i class="fas fa-check text-blue-400"></i> 35 Claim Blocks</li>
+                    </ul>
+                    <button class="w-full bg-gradient-to-r from-blue-600 to-purple-600 py-3 rounded-lg font-semibold hover:shadow-lg transition btn-shine **purchase-btn**" **data-rank="Cyclone" data-price="35000"**>
+                        Purchase
+                    </button>
+                </div>
+                
+                <!-- Tempest -->
+                <div class="rank-card glass rounded-xl p-6 hover:border-purple-500/50">
+                    <div class="text-4xl mb-4 text-purple-400"><i class="fas fa-bolt"></i></div>
+                    <h3 class="text-2xl font-bold mb-2 text-purple-400">Tempest</h3>
+                    <p class="text-3xl font-bold mb-4 text-yellow-400">$50</p>
+                    <ul class="space-y-2 mb-6 text-gray-300">
+                        <li><i class="fas fa-check text-purple-400"></i> 12 Homes</li>
+                        <li><i class="fas fa-check text-purple-400"></i> /kit tempest</li>
+                        <li><i class="fas fa-check text-purple-400"></i> Enchanted Aura</li>
+                        <li><i class="fas fa-check text-purple-400"></i> 50 Claim Blocks</li>
+                    </ul>
+                    <button class="w-full bg-gradient-to-r from-blue-600 to-purple-600 py-3 rounded-lg font-semibold hover:shadow-lg transition btn-shine **purchase-btn**" **data-rank="Tempest" data-price="50000"**>
+                        Purchase
+                    </button>
+                </div>
+                
+                <!-- Typhoon -->
+                <div class="rank-card glass rounded-xl p-6 hover:border-purple-500/50">
+                    <div class="text-4xl mb-4 text-purple-500"><i class="fas fa-water"></i></div>
+                    <h3 class="text-2xl font-bold mb-2 text-purple-500">Typhoon</h3>
+                    <p class="text-3xl font-bold mb-4 text-yellow-400">$75</p>
+                    <ul class="space-y-2 mb-6 text-gray-300">
+                        <li><i class="fas fa-check text-purple-400"></i> 16 Homes</li>
+                        <li><i class="fas fa-check text-purple-400"></i> /kit typhoon</li>
+                        <li><i class="fas fa-check text-purple-400"></i> God Armor Set</li>
+                        <li><i class="fas fa-check text-purple-400"></i> 75 Claim Blocks</li>
+                    </ul>
+                    <button class="w-full bg-gradient-to-r from-purple-600 to-pink-600 py-3 rounded-lg font-semibold hover:shadow-lg transition btn-shine **purchase-btn**" **data-rank="Typhoon" data-price="75000"**>
+                        Purchase
+                    </button>
+                </div>
+                
+                <!-- Nausicaa (Ultimate) -->
+                <div class="rank-card glass rounded-xl p-6 md:col-span-2 lg:col-span-1 xl:col-span-1 nausicaa-rank border-2 border-yellow-500/50">
+                    <div class="text-5xl mb-4 text-yellow-400"><i class="fas fa-crown"></i></div>
+                    <h3 class="text-3xl font-bold mb-2 text-yellow-400">Nausicaa</h3>
+                    <p class="text-4xl font-bold mb-4 text-yellow-400">$100</p>
+                    <ul class="space-y-2 mb-6 text-gray-300">
+                        <li><i class="fas fa-check text-yellow-400"></i> Unlimited Homes</li>
+                        <li><i class="fas fa-check text-yellow-400"></i> /kit nausicaa</li>
+                        <li><i class="fas fa-check text-yellow-400"></i> Legendary Prefix</li>
+                        <li><i class="fas fa-check text-yellow-400"></i> 100 Claim Blocks</li>
+                    </ul>
+                    <button class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-yellow-500/50 transition btn-shine **purchase-btn** text-black" **data-rank="Nausicaa" data-price="100000"**>
+                        Purchase Ultimate
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="glass border-t border-cyan-500/20 py-8 mt-20">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="text-2xl hover:text-cyan-400 transition"><i class="fab fa-discord"></i></a>
+                <a href="#" class="text-2xl hover:text-cyan-400 transition"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-2xl hover:text-cyan-400 transition"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="text-2xl hover:text-cyan-400 transition"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p class="text-gray-400">&copy; 2024 Nausicaa Network. All rights reserved.</p>
+            <p class="text-gray-500 text-sm mt-2">Not affiliated with Mojang or Microsoft</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Create particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particlesContainer.appendChild(particle);
+        }
+        
+        // Copy IP functionality
+        const copyBtn = document.getElementById('copyBtn');
+        const ipText = document.getElementById('ipText');
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText('nausicaa.net');
+            const original = ipText.textContent;
+            ipText.textContent = 'Copied!';
+            ipText.style.color = '#10b981';
+            setTimeout(() => {
+                ipText.textContent = original;
+                ipText.style.color = '';
+            }, 2000);
+        });
+        
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.rank-card').forEach(card => {
+            observer.observe(card);
+        });
+        
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

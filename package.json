@@ -8,7 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "minecraft-rcon-client": "^3.0.0",
+    "minecraft-rcon-client": "^4.2.4",
     "next": "16.0.5",
     "react": "19.2.0",
     "react-dom": "19.2.0",

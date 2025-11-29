@@ -24,23 +24,21 @@ module.exports = async (req, res) => {
         const externalId = `NN-${rank}-${Date.now()}-${ign.toUpperCase()}`;
         const amountInIDR = price; 
 
-        const invoice = await Invoice.createInvoice(invoiceSpecificOptions, {
+        const invoice = await Invoice.createInvoice({
             externalId: externalId,
             amount: amountInIDR,
-            payerEmail: 'arlieztopia@gmail.com', // Ganti dengan emailmu
+            payerEmail: 'arlieztopia@gmail.com', // Pastikan sudah diganti dengan email kamu!
             description: `Pembelian Rank ${rank} untuk IGN: ${ign}`,
             
-            // (3) METADATA: Data penting yang akan dibaca Webhook (File selanjutnya)
             metadata: {
                 player_ign: ign,
                 rank_name: rank
             },
             
-            // (4) CALLBACK URL: Link ke file API kita yang satunya!
             callbackVirtualAccount: `${req.headers.origin}/api/xendit-webhook`,
             
             paymentMethods: ['QRIS', 'ID_OVO', 'BCA', 'BRI', 'PERMATA'], 
-        });
+        }); // <-- Hanya ada satu objek data di sini
 
         // (5) Kirim link pembayaran kembali ke JavaScript di index.html
         res.status(200).json({ invoice_url: invoice.invoice_url });

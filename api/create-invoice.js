@@ -24,27 +24,31 @@ module.exports = async (req, res) => {
         const externalId = `NN-${rank}-${Date.now()}-${ign.toUpperCase()}`;
         const amountInIDR = price; 
 
-        const invoice = await Invoice.createInvoice({
+        // INI ADALAH PANGGILAN FUNGSI YANG BENAR
+        const invoice = await Invoice.createInvoice({ // HANYA SATU OBJEK INI { ... }
             externalId: externalId,
             amount: amountInIDR,
-            payerEmail: 'arlieztopia@gmail.com', // Pastikan sudah diganti dengan email kamu!
+            payerEmail: 'arlieztopia@gmail.com', // PASTIKAN SUDAH GANTI DENGAN EMAIL KAMU YG AKTIF!
             description: `Pembelian Rank ${rank} untuk IGN: ${ign}`,
             
+            // (3) METADATA
             metadata: {
                 player_ign: ign,
                 rank_name: rank
             },
             
+            // (4) CALLBACK URL
             callbackVirtualAccount: `${req.headers.origin}/api/xendit-webhook`,
             
             paymentMethods: ['QRIS', 'ID_OVO', 'BCA', 'BRI', 'PERMATA'], 
-        }); // <-- Hanya ada satu objek data di sini
+        });
 
         // (5) Kirim link pembayaran kembali ke JavaScript di index.html
         res.status(200).json({ invoice_url: invoice.invoice_url });
 
     } catch (error) {
-        console.error('Xendit Error:', error.message);
-        res.status(500).json({ error: 'Gagal membuat invoice di Xendit. Cek API Key.' });
+        // Ini adalah cara untuk menampilkan pesan error Xendit di log Vercel
+        console.error('Xendit Error:', error.message); 
+        res.status(500).json({ message: 'Gagal membuat invoice: ' + error.message });
     }
 };

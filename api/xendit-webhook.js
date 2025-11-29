@@ -1,7 +1,7 @@
 // /api/xendit-webhook.js
 
 // (1) Import RCON Client
-const Rcon = require('minecraft-rcon-client'); 
+const Rcon = require('rcon-client').Rcon; 
 
 // (2) SETUP RAHASIA: Ambil detail rahasia dari Environment Variables Vercel
 const XENDIT_WEBHOOK_SECRET = process.env.XENDIT_WEBHOOK_SECRET; 

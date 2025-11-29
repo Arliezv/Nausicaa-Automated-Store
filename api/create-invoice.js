@@ -1,7 +1,7 @@
 // /api/create-invoice.js
 
 // (1) Import Xendit SDK
-const Xendit = require('xendit-node');
+const { Xendit } = require('xendit-node');
 
 // (2) SETUP RAHASIA: Ambil Secret Key dari Environment Variable (Harus di-set di Vercel nanti!)
 const x = new Xendit({ secretKey: process.env.XENDIT_SECRET_KEY }); 
